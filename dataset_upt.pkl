@@ -1,0 +1,27 @@
+import pandas as pd
+from datetime import datetime
+
+# Example dataset (replace with your actual dataset)
+data = pd.DataFrame({
+    'CardholderID': [1, 1, 2, 2, 2, 3],
+    'TransactionAmount': [10.0, 15.0, 20.0, 25.0, 30.0, 35.0],
+    'TransactionTimestamp': ['2022-01-01 08:00:00', '2022-01-01 12:00:00',
+                              '2022-01-02 09:00:00', '2022-01-02 13:00:00',
+                              '2022-01-02 15:00:00', '2022-01-03 10:00:00']
+})
+
+# Convert 'TransactionTimestamp' to datetime format
+data['TransactionTimestamp'] = pd.to_datetime(data['TransactionTimestamp'])
+
+# Calculate Transaction Frequency
+data['TransactionFrequency'] = data.groupby('CardholderID')['TransactionAmount'].transform('count')
+
+# Calculate Amount Deviation
+data['AmountDeviation'] = data.groupby('CardholderID')['TransactionAmount'].transform('std')
+
+# Extract time-based features
+data['HourOfDay'] = data['TransactionTimestamp'].dt.hour
+data['DayOfWeek'] = data['TransactionTimestamp'].dt.dayofweek
+
+# Save the updated dataset
+data.to_csv('updated_dataset.csv', index=False) #Add data file and rename it updated_dataset.csv
